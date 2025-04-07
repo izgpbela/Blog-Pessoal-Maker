@@ -19,7 +19,8 @@ Este projeto implementa uma API RESTful para um sistema de blog pessoal com:
 |-------------------|-----------------------------------------------------------------------------|
 | Backend           | Java 17, Spring Boot 3.x, Spring Security, JWT                             |
 | Persistência      | Spring Data JPA, Hibernate, MySQL/PostgreSQL                               |
-| Documentação      | Swagger/OpenAPI                                                            |
+| Documentação      | Swagger                                                                    |
+| Testes            | Postman                                                                    | 
 | Ferramentas       | Maven, Git                                                                 |
 
 ## ⚙️ Configuração Inicial
@@ -60,36 +61,6 @@ Este projeto implementa uma API RESTful para um sistema de blog pessoal com:
 | PUT    | `/{id}`        | Atualiza postagem             |
 | DELETE | `/{id}`        | Remove postagem               |
 
-## 📊 Modelo de Dados
-
-```mermaid
-classDiagram
-    class Usuario {
-        +Long id
-        +String nome
-        +String email
-        +String senha
-        +String foto
-        +List<Postagem> postagens
-    }
-    
-    class Postagem {
-        +Long id
-        +String titulo
-        +String conteudo
-        +LocalDateTime data
-        +Usuario usuario
-    }
-    
-    class Tema {
-        +Long id
-        +String descricao
-        +List<Postagem> postagens
-    }
-    
-    Usuario "1" -- "*" Postagem : publica
-    Tema "1" -- "*" Postagem : contém
-```
 
 ## 🔍 Documentação com Swagger
 
