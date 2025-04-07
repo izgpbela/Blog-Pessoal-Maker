@@ -1,122 +1,96 @@
 package com.blogpessoal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import org.springframework.security.core.GrantedAuthority;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-
 @Entity
-@Table(name = "tb_usuarios")
+@Table(name = "usuario")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Usuario implements UserDetails {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @NotBlank(message = "O nome é obrigatório!")
-    private String nome;
-    
-    @NotBlank(message = "O usuário é obrigatório!")
-    @Email(message = "O usuário deve ser um email válido!")
-    private String usuario;
-    
-    @NotBlank(message = "A senha é obrigatória!")
-    @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres")
-    private String senha;
-    
+	
+	@Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    private String name;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    private String password;
+
     private String foto;
-    
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE)
-    private List<Postagem> postagens;
-    
-    
-	    // Getters e Setters
-	    public Long getId() {
-	        return id;
-	    }
 
-	    public void setId(Long id) {
-	        this.id = id;
-	    }
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-	    public String getNome() {
-	        return nome;
-	    }
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("usuario")
+    private List<Post> posts;
 
-	    public void setNome(String nome) {
-	        this.nome = nome;
-	    }
+    public UUID getId() {
+        return id;
+    }
 
-	    public String getUsuario() {
-	        return usuario;
-	    }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-	    public void setUsuario(String usuario) {
-	        this.usuario = usuario;
-	    }
+    public String getName() {
+        return name;
+    }
 
-	    public String getSenha() {
-	        return senha;
-	    }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	    public void setSenha(String senha) {
-	        this.senha = senha;
-	    }
+    public String getEmail() {
+        return email;
+    }
 
-	    public String getFoto() {
-	        return foto;
-	    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	    public void setFoto(String foto) {
-	        this.foto = foto;
-	    }
+    public String getPassword() {
+        return password;
+    }
 
-	    public List<Postagem> getPostagens() {
-	        return postagens;
-	    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	    public void setPostagens(List<Postagem> postagens) {
-	        this.postagens = postagens;
-	    }
-	    
-	 // Métodos do UserDetails
-	    @Override
-	    public Collection<? extends GrantedAuthority> getAuthorities() {
-	        return List.of();
-	    }
-	    
-	    @Override
-	    public String getPassword() {
-	        return senha;
-	    }
-	    
-	    @Override
-	    public String getUsername() {
-	        return usuario;
-	    }
-	    
-	    @Override
-	    public boolean isAccountNonExpired() {
-	        return true;
-	    }
-	    
-	    @Override
-	    public boolean isAccountNonLocked() {
-	        return true;
-	    }
-	    
-	    @Override
-	    public boolean isCredentialsNonExpired() {
-	        return true;
-	    }
-	    
-	    @Override
-	    public boolean isEnabled() {
-	        return true;
-	    }
+    public String getPhoto() {
+        return foto;
+    }
+
+    public void setPhoto(String photo) {
+        this.foto = foto;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
 }

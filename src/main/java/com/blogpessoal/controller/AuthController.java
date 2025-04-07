@@ -1,8 +1,12 @@
 package com.blogpessoal.controller;
 
-import com.blogpessoal.dto.UsuarioLoginDTO;
-import com.blogpessoal.security.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import com.blogpessoal.model.Role;
+import com.blogpessoal.dto.request.AuthRequest;
+import com.blogpessoal.dto.request.CreateUserRequest;
+import com.blogpessoal.dto.response.AuthResponse;
+import com.blogpessoal.security.JwtUtil;
+import com.blogpessoal.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,25 +17,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    
-    @Autowired
-    private JwtService jwtService;
-    
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final UsuarioService userService;
+
+    public AuthController(AuthenticationManager authenticationManager,
+                          JwtUtil jwtUtil, UsuarioService usuarioService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.usuarioService = usuarioService;
+    }
+
     @PostMapping("/login")
-    public ResponseEntity<String> autenticar(@RequestBody UsuarioLoginDTO usuarioLoginDTO) {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-            usuarioLoginDTO.getUsuario(), 
-            usuarioLoginDTO.getSenha()
-        );
-        
-        authentication = authenticationManager.authenticate(authentication);
-        
-        String token = jwtService.gerarToken(authentication);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        String token = jwtUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new AuthResponse(token));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> registerUser(@Valid @RequestBody CreateUserRequest request) {
+        return register(request, Role.USER);
+    }
+
+    @PostMapping("/admin/register")
+    public ResponseEntity<AuthResponse> registerAdmin(@Valid @RequestBody CreateUserRequest request) {
+        return register(request, Role.ADMIN);
+    }
+
+    private ResponseEntity<AuthResponse> register(CreateUserRequest request, Role role) {
+        var user = userService.createUser(request, role);
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+        String token = jwtUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new AuthResponse(token));
     }
 }

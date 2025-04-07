@@ -13,22 +13,31 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
 @Entity
-@Table (name = "temas")
+@Table(name = "temas")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Tema {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @NotBlank(message = "A descrição é obrigatória!")
-    @Size(min = 5, max = 100, message = "A descrição deve conter entre 5 e 100 caracteres")
-    private String descricao;
-    
-    @OneToMany(mappedBy = "tema", cascade = CascadeType.REMOVE)
-    private List<Postagem> postagens;
 
-    // Getters e Setters
+    private String description;
+
+    @OneToMany(mappedBy = "tema", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("tema")
+    private List<Post> posts;
+
     public Long getId() {
         return id;
     }
@@ -37,19 +46,19 @@ public class Tema {
         this.id = id;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public List<Postagem> getPostagens() {
-        return postagens;
+    public List<Post> getPosts() {
+        return posts;
     }
 
-    public void setPostagens(List<Postagem> postagens) {
-        this.postagens = postagens;
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 }// fimClass

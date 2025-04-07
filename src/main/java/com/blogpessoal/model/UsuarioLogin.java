@@ -2,7 +2,7 @@ package com.blogpessoal.model;
 
 public class UsuarioLogin {
 	
-	 private Long id;
+	    private Long id;
 	    private String nome;
 	    private String usuario;
 	    private String senha;
