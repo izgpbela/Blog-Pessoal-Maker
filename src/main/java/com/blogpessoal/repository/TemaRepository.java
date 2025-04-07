@@ -6,5 +6,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TemaRepository extends JpaRepository<Tema, Long> {
+    
     List<Tema> findAllByDescricaoContainingIgnoreCase(@Param("descricao") String descricao);
 }

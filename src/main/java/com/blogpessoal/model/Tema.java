@@ -22,7 +22,7 @@ public class Tema {
     private Long id;
     
     @NotBlank(message = "A descrição é obrigatória!")
-    @Size(min = 5, max = 255, message = "A descrição deve conter entre 5 e 255 caracteres")
+    @Size(min = 5, max = 100, message = "A descrição deve conter entre 5 e 100 caracteres")
     private String descricao;
     
     @OneToMany(mappedBy = "tema", cascade = CascadeType.REMOVE)
