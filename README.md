@@ -19,7 +19,7 @@ Este projeto implementa uma API RESTful para um sistema de blog pessoal com:
 |-------------------|-----------------------------------------------------------------------------|
 | Backend           | Java 17, Spring Boot 3.x, Spring Security, JWT                             |
 | Persistência      | Spring Data JPA, Hibernate, MySQL/PostgreSQL                               |
-| Documentação      | Swagger                                                                    |
+| Documentação      | Swagger/OpenAI                                                               |
 | Testes            | Postman                                                                    | 
 | Ferramentas       | Maven, Git                                                                 |
 
