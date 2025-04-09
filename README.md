@@ -119,7 +119,6 @@ src/
 │   │   ├── security/      # Config JWT e filtros
 │   │   └── service/       # Lógica de negócio
 │   └── resources/
-│       ├── static/        # Assets estáticos
 │       └── application.properties
 └── test/                  # Testes unitários e integração
 ```
